@@ -4,6 +4,10 @@ import 'package:provider/provider.dart';
 import 'pace_provider.dart';
 import '../../user_list/presentation/user_list_screen.dart';
 
+/// The primary user interface screen for selecting and validating the swimmer's pace.
+/// 
+/// This screen provides an interactive experience combining direct text input fields,
+/// coordinate control arrows, and a continuous horizontal sync slider.
 class PaceScreen extends StatefulWidget {
   const PaceScreen({super.key});
 
@@ -18,6 +22,7 @@ class _PaceScreenState extends State<PaceScreen> {
   @override
   void initState() {
     super.initState();
+    // Fetch an un-reactive snapshot reference to populate controller starting states
     final provider = Provider.of<PaceProvider>(context, listen: false);
     _minController = TextEditingController(text: provider.minutes.toString());
     _secController = TextEditingController(text: provider.seconds.toString().padLeft(2, '0'));
@@ -25,12 +30,13 @@ class _PaceScreenState extends State<PaceScreen> {
 
   @override
   void dispose() {
+    // Explicitly release text controllers from memory to prevent leak accumulation
     _minController.dispose();
     _secController.dispose();
     super.dispose();
   }
 
-  // Synchronize TextFields when provider state changes from slider
+  // Synchronizes text editing configurations when slider updates mutations from the provider
   void _updateControllers(int mins, int secs) {
     if (_minController.text != mins.toString()) {
       _minController.text = mins.toString();
@@ -43,6 +49,7 @@ class _PaceScreenState extends State<PaceScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Actively watch reactive changes in PaceProvider to rebuild layout hierarchies
     final provider = context.watch<PaceProvider>();
     _updateControllers(provider.minutes, provider.seconds);
 
@@ -98,7 +105,7 @@ class _PaceScreenState extends State<PaceScreen> {
               ),
               const SizedBox(height: 48),
 
-              // Interactive Slider
+              // Interactive Slider Component
               Slider(
                 value: provider.totalSeconds.toDouble().clamp(provider.minSliderValue, provider.maxSliderValue),
                 min: provider.minSliderValue,
@@ -123,7 +130,7 @@ class _PaceScreenState extends State<PaceScreen> {
               ),
               const Spacer(),
 
-              // API Status Message
+              // API Status Message Panel
               if (provider.errorMessage != null) ...[
                 Text(
                   provider.errorMessage!,
@@ -149,14 +156,14 @@ class _PaceScreenState extends State<PaceScreen> {
                   onPressed: provider.isLoading
                       ? null
                       : () async {
-                          // 1. Trigger the API POST request
+                          // 1. Trigger the API POST request via state provider
                           await provider.sendPace();
                           
-                          // 2. Read the latest provider state after request completes
+                          // 2. Safely verify widget tree mounting context before context operations
                           if (context.mounted) {
                             final latestProvider = Provider.of<PaceProvider>(context, listen: false);
                             
-                            // 3. If there is no error or it's a Success message, navigate forward
+                            // 3. Routing workflow if state acknowledges a successful sync transaction
                             if (latestProvider.errorMessage != null && 
                                 latestProvider.errorMessage!.contains('Success')) {
                               
@@ -171,7 +178,6 @@ class _PaceScreenState extends State<PaceScreen> {
                       ? const CircularProgressIndicator(color: Colors.white)
                       : const Text('Continue', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 ),
-
               ),
             ],
           ),
@@ -180,7 +186,7 @@ class _PaceScreenState extends State<PaceScreen> {
     );
   }
 
-  // Helper Widget to build minutes and seconds controls
+  // Helper Widget to build structured minutes and seconds vertical input layout columns
   Widget _buildTimeColumn({
     required BuildContext context,
     required TextEditingController controller,
@@ -203,6 +209,7 @@ class _PaceScreenState extends State<PaceScreen> {
             style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
             decoration: const InputDecoration(border: InputBorder.none),
             inputFormatters: [
+              // Intercept entries to allow positive numbers only and enforce 2 digit bounds
               FilteringTextInputFormatter.digitsOnly,
               LengthLimitingTextInputFormatter(2),
             ],
