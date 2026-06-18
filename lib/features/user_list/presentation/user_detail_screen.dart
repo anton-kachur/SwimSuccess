@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import '../data/models/user_model.dart';
 
+/// A presentation screen displaying full structured profile insights for a specific user.
+/// 
+/// This view extracts metadata nested deep within the immutable [UserModel], splitting
+/// information into discrete logical sections: contact points, address locations, and corporate roles.
 class UserDetailScreen extends StatelessWidget {
+  /// The immutable model payload containing targeted user information parameters.
   final UserModel user;
 
   const UserDetailScreen({super.key, required this.user});
@@ -20,7 +25,7 @@ class UserDetailScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // User Profile Header Info
+              // Section 1: Core demographic metadata and contact information
               _buildSectionHeader('General Info'),
               _buildDetailCard(
                 context,
@@ -33,7 +38,7 @@ class UserDetailScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
 
-              // Address Info Section
+              // Section 2: Residential geolocation layout details
               _buildSectionHeader('Address Details'),
               _buildDetailCard(
                 context,
@@ -44,12 +49,12 @@ class UserDetailScreen extends StatelessWidget {
                     'Street',
                     '${user.address.street}, ${user.address.suite}',
                   ),
-                  _buildDetailTile(Icons.mark_as_unread, 'Zip Code', user.address.zipcode),
+                  _buildDetailTile(Icons.local_post_office, 'Zip Code', user.address.zipcode),
                 ],
               ),
               const SizedBox(height: 24),
 
-              // Company Info Section
+              // Section 3: B2B company assignments and corporate catchphrases
               _buildSectionHeader('Company Info'),
               _buildDetailCard(
                 context,
@@ -66,7 +71,7 @@ class UserDetailScreen extends StatelessWidget {
     );
   }
 
-  // Helper Widget to display small category text headers
+  // Helper UI component generating stylized category labels for block headers
   Widget _buildSectionHeader(String title) {
     return Padding(
       padding: const EdgeInsets.only(left: 4.0, bottom: 8.0),
@@ -82,7 +87,7 @@ class UserDetailScreen extends StatelessWidget {
     );
   }
 
-  // Helper Widget to style information block containers
+  // Helper UI component wrapping sets of data tiles into bounded Surface container blocks
   Widget _buildDetailCard(BuildContext context, {required List<Widget> children}) {
     return Card(
       color: Theme.of(context).colorScheme.surface,
@@ -97,7 +102,7 @@ class UserDetailScreen extends StatelessWidget {
     );
   }
 
-  // Helper Widget to layout single rows of personal data
+  // Helper UI component aligning single properties cleanly alongside descriptive metadata icons
   Widget _buildDetailTile(IconData icon, String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
