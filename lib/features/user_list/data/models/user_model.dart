@@ -1,3 +1,7 @@
+/// A strongly-typed data model representing a user entity fetched from the remote API.
+/// 
+/// This class encapsulates core user profile data and ensures full type safety,
+/// preventing raw [Map] objects from leaking directly into the presentation layer.
 class UserModel {
   final int id;
   final String name;
@@ -19,7 +23,7 @@ class UserModel {
     required this.company,
   });
 
-  // Factory method to parse server JSON into typed model
+  /// Factory constructor to securely map raw dynamic JSON entries into an immutable [UserModel].
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['id'] as int,
@@ -28,12 +32,14 @@ class UserModel {
       email: json['email'] as String,
       phone: json['phone'] as String,
       website: json['website'] as String,
+      // Map complex nested sub-structures using their own domain model contract definitions
       address: Address.fromJson(json['address'] as Map<String, dynamic>),
       company: Company.fromJson(json['company'] as Map<String, dynamic>),
     );
   }
 }
 
+/// A structured sub-model representing the geo-location and address configuration of a user.
 class Address {
   final String street;
   final String suite;
@@ -47,6 +53,7 @@ class Address {
     required this.zipcode,
   });
 
+  /// Factory constructor to safely parse nested address metadata maps.
   factory Address.fromJson(Map<String, dynamic> json) {
     return Address(
       street: json['street'] as String,
@@ -57,6 +64,7 @@ class Address {
   }
 }
 
+/// A structured sub-model encapsulating the workplace and business metrics of a user.
 class Company {
   final String name;
   final String catchPhrase;
@@ -68,6 +76,7 @@ class Company {
     required this.bs,
   });
 
+  /// Factory constructor to safely parse nested company target parameter sets.
   factory Company.fromJson(Map<String, dynamic> json) {
     return Company(
       name: json['name'] as String,
@@ -76,3 +85,4 @@ class Company {
     );
   }
 }
+
