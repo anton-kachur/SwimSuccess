@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'user_provider.dart';
-import 'user_detail_screen.dart'; // We will create this screen next
+import 'user_detail_screen.dart';
 
+/// Presentation layer view displaying a searchable directory list of fetched user accounts.
+/// 
+/// This screen actively listens to state transitions from [UserProvider], displaying tailored
+/// states for active background loading, systemic networking errors, and empty query results.
 class UserListScreen extends StatelessWidget {
   const UserListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Actively monitor real-time reactive state parameters from UserProvider
     final provider = context.watch<UserProvider>();
 
     return Scaffold(
@@ -20,7 +25,7 @@ class UserListScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // Search Input Field
+            // Search input section dispatching string lookup variables to the provider
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               child: TextField(
@@ -38,7 +43,7 @@ class UserListScreen extends StatelessWidget {
               ),
             ),
 
-            // Main Content Area handling loading, error, and list states
+            // Flexible layout tree switching component bodies depending on background state flags
             Expanded(
               child: provider.isLoading
                   ? const Center(child: CircularProgressIndicator(color: Colors.blueAccent))
@@ -89,7 +94,7 @@ class UserListScreen extends StatelessWidget {
                                       ),
                                       trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
                                       onTap: () {
-                                        // Navigate to User Details Screen
+                                        // Forward the fully parsed, immutable type directly to the detail route
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -109,7 +114,7 @@ class UserListScreen extends StatelessWidget {
     );
   }
 
-  // Helper Widget to render clean error messages with retry button
+  // Helper UI component delivering isolated warning cards with built-in action fallback callbacks
   Widget _buildErrorWidget(BuildContext context, String message, VoidCallback onRetry) {
     return Center(
       child: Padding(
@@ -136,3 +141,4 @@ class UserListScreen extends StatelessWidget {
     );
   }
 }
+
