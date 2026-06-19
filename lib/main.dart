@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Swim Success',
         debugShowCheckedModeBanner: false, // Disables the generic debug badge banner
-        theme: AppTheme.darkTheme,        // Attaches the custom system-wide dark style parameters
+        theme: AppTheme.darkTheme,         // Attaches the custom system-wide dark style parameters
         home: const PaceScreen(),          // Configures the default layout initialization gateway route
       ),
     );

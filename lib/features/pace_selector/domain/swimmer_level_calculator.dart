@@ -8,11 +8,16 @@ class SwimmerLevelCalculator {
   /// 
   /// Takes the calculated [totalSeconds] for a 100-meter swim and maps it
   /// against predefined performance threshold brackets.
-  static String getLevel(int totalSeconds) {
-    if (totalSeconds <= 65) return 'Elite';
-    if (totalSeconds <= 90) return 'Advanced';
-    if (totalSeconds <= 130) return 'Intermediate';
-    return 'Beginner';
+  static String getLevel(double sliderValue) {
+    if (sliderValue <= 1.0) {
+      return 'Elite';
+    } else if (sliderValue <= 2.0) {
+      return 'Advanced';
+    } else if (sliderValue <= 3.0) {
+      return 'Intermediate';
+    } else {
+      return 'Beginner';
+    }
   }
 }
 

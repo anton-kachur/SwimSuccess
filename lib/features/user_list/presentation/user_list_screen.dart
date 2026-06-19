@@ -46,67 +46,67 @@ class UserListScreen extends StatelessWidget {
             // Flexible layout tree switching component bodies depending on background state flags
             Expanded(
               child: provider.isLoading
-                  ? const Center(child: CircularProgressIndicator(color: Colors.blueAccent))
-                  : provider.errorMessage != null
-                      ? _buildErrorWidget(context, provider.errorMessage!, provider.loadUsers)
-                      : provider.users.isEmpty
-                          ? const Center(child: Text('No users found.'))
-                          : RefreshIndicator(
-                              onRefresh: () => provider.loadUsers(),
-                              color: Colors.blueAccent,
-                              child: ListView.builder(
-                                padding: const EdgeInsets.all(16),
-                                itemCount: provider.users.length,
-                                itemBuilder: (context, index) {
-                                  final user = provider.users[index];
-                                  return Card(
-                                    color: Theme.of(context).colorScheme.surface,
-                                    margin: const EdgeInsets.only(bottom: 12),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
+                ? const Center(child: CircularProgressIndicator(color: Colors.blueAccent))
+                : provider.errorMessage != null
+                  ? _buildErrorWidget(context, provider.errorMessage!, provider.loadUsers)
+                  : provider.users.isEmpty
+                    ? const Center(child: Text('No users found.'))
+                    : RefreshIndicator(
+                        onRefresh: () => provider.loadUsers(),
+                        color: Colors.blueAccent,
+                        child: ListView.builder(
+                          padding: const EdgeInsets.all(16),
+                          itemCount: provider.users.length,
+                          itemBuilder: (context, index) {
+                            final user = provider.users[index];
+                            return Card(
+                              color: Theme.of(context).colorScheme.surface,
+                              margin: const EdgeInsets.only(bottom: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: ListTile(
+                                contentPadding: const EdgeInsets.all(16),
+                                title: Text(
+                                  user.name,
+                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                ),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(height: 8),
+                                    Row(
+                                      children: [
+                                        const Icon(Icons.email, size: 16, color: Colors.grey),
+                                        const SizedBox(width: 8),
+                                        Expanded(child: Text(user.email)),
+                                      ],
                                     ),
-                                    child: ListTile(
-                                      contentPadding: const EdgeInsets.all(16),
-                                      title: Text(
-                                        user.name,
-                                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                                      ),
-                                      subtitle: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          const SizedBox(height: 8),
-                                          Row(
-                                            children: [
-                                              const Icon(Icons.email, size: 16, color: Colors.grey),
-                                              const SizedBox(width: 8),
-                                              Expanded(child: Text(user.email)),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 4),
-                                          Row(
-                                            children: [
-                                              const Icon(Icons.phone, size: 16, color: Colors.grey),
-                                              const SizedBox(width: 8),
-                                              Text(user.phone),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
-                                      onTap: () {
-                                        // Forward the fully parsed, immutable type directly to the detail route
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => UserDetailScreen(user: user),
-                                          ),
-                                        );
-                                      },
+                                    const SizedBox(height: 4),
+                                    Row(
+                                      children: [
+                                        const Icon(Icons.phone, size: 16, color: Colors.grey),
+                                        const SizedBox(width: 8),
+                                        Text(user.phone),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+                                onTap: () {
+                                  // Forward the fully parsed, immutable type directly to the detail route
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => UserDetailScreen(user: user),
                                     ),
                                   );
                                 },
                               ),
-                            ),
+                            );
+                          },
+                        ),
+                      ),
             ),
           ],
         ),
